@@ -1,21 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Screen from './Screen';
 
 const HomeScreen: React.FC = () => {
   return (
-    <View style={styles.container}>
+    <Screen>
       <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    </Screen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default HomeScreen;
