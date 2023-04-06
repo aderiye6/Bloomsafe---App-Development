@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import Onboarding from '../components/Onboarding/Onboarding';
@@ -7,7 +8,10 @@ import Screen from './Screen';
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
-  const exitOnboarding = () => navigation.push('Home');
+  const exitOnboarding = () => {
+    AsyncStorage.setItem('appLaunched', 'true');
+    navigation.push('Home');
+  };
   return (
     <Screen>
       <Onboarding exit={exitOnboarding} />
