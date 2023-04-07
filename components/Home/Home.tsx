@@ -4,6 +4,10 @@ import { BLOOM_GREEN } from '../../constants';
 import Button from '../Button/Button';
 import UsageStep from './UsageStep/UsageStep';
 
+interface Props {
+  openCamera: () => void;
+}
+
 const useageSteps = [
   {
     step: 1,
@@ -27,7 +31,7 @@ const useageSteps = [
   },
 ];
 
-const Home: React.FC = () => {
+const Home: React.FC<Props> = ({ openCamera }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
@@ -39,7 +43,7 @@ const Home: React.FC = () => {
         ))}
       </View>
 
-      <Button text='Next' onPress={() => console.log('pressed')} />
+      <Button text='Next' onPress={openCamera} />
     </View>
   );
 };

@@ -1,11 +1,19 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import Home from '../components/Home/Home';
+import { RootStackParamList } from '../types';
 import Screen from './Screen';
 
-const HomeScreen: React.FC = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const openCamera = () => {
+    navigation.push('SnapChip');
+  };
+
   return (
     <Screen>
-      <Home />
+      <Home openCamera={openCamera} />
     </Screen>
   );
 };
