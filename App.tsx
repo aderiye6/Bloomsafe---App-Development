@@ -6,6 +6,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
+import SnapChipScreen from './screens/SnapChipScreen';
 import { RootStackParamList } from './types';
 
 // Keep the splash screen visible while we fetch resources
@@ -66,6 +67,7 @@ const App: React.FC = () => {
             <Stack.Screen name='Onboarding' component={OnboardingScreen} />
           ) : null}
           <Stack.Screen name='Home' component={HomeScreen} />
+          <Stack.Screen name='SnapChip' component={SnapChipScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
