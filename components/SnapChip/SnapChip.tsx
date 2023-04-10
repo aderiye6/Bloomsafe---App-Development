@@ -1,7 +1,7 @@
 import { Camera, CameraType } from 'expo-camera';
 import React, { useRef, useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BLOOM_GREEN } from '../../constants';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import NoCameraAccess from '../NoCameraAccess/NoCameraAccess';
 import TestResult from './TestResult/TestResult';
 
 const SnapChip: React.FC = () => {
@@ -23,11 +23,7 @@ const SnapChip: React.FC = () => {
   }
 
   if (!permission?.granted) {
-    return (
-      <View style={styles.noAccessContainer}>
-        <Text style={styles.noAccessText}>No access to camera</Text>
-      </View>
-    );
+    return <NoCameraAccess />;
   }
 
   return (
@@ -77,16 +73,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     backgroundColor: 'white',
-  },
-  noAccessContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noAccessText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: BLOOM_GREEN,
   },
 });
 
