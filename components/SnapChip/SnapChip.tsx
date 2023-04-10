@@ -2,6 +2,7 @@ import { Camera, CameraType } from 'expo-camera';
 import React, { useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BLOOM_GREEN } from '../../constants';
+import TestResult from './TestResult/TestResult';
 
 const SnapChip: React.FC = () => {
   const [cameraReady, setCameraReady] = useState(false);
@@ -38,7 +39,12 @@ const SnapChip: React.FC = () => {
     >
       {cameraReady ? (
         <View style={styles.overlay}>
-          <TouchableOpacity onPress={takePicture} style={styles.shutter} />
+          <View style={styles.testArea}>
+            <TestResult result={1} />
+          </View>
+          <View style={styles.shutterContainer}>
+            <TouchableOpacity onPress={takePicture} style={styles.shutter} />
+          </View>
         </View>
       ) : null}
     </Camera>
@@ -52,16 +58,25 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+  },
+  testArea: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  shutterContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 30,
   },
   shutter: {
     width: 70,
     height: 70,
     borderRadius: 35,
     backgroundColor: 'white',
-    marginBottom: 30,
   },
   noAccessContainer: {
     flex: 1,
