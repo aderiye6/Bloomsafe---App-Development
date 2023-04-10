@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -11,6 +10,7 @@ import React from 'react';
 import { AppStateStatus, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppState } from './hooks/useAppState';
+import useFirstLaunch from './hooks/useFirstLaunch';
 import { useOnlineManager } from './hooks/useOnlineManager';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
@@ -33,48 +33,11 @@ function onAppStateChange(status: AppStateStatus) {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
-  const [appIsReady, setAppIsReady] = React.useState(false);
-  const [firstLaunch, setFirstLaunch] = React.useState(false);
-
+  const { isAppReady, isFirstLaunch } = useFirstLaunch();
   useOnlineManager();
-
   useAppState(onAppStateChange);
 
-  React.useEffect(() => {
-    async function prepare() {
-      try {
-        const appLaunched = await AsyncStorage.getItem('appLaunched');
-        if (
-          appLaunched === null ||
-          appLaunched === undefined ||
-          appLaunched === 'false'
-        ) {
-          setFirstLaunch(true);
-          AsyncStorage.setItem('appLaunched', 'false');
-        } else {
-          setFirstLaunch(false);
-        }
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        // Tell the application to render
-        setAppIsReady(true);
-      }
-    }
-    prepare();
-  }, []);
-
-  React.useEffect(() => {
-    const closeSplashScreen = async () => {
-      if (appIsReady) {
-        await SplashScreen.hideAsync();
-      }
-    };
-
-    closeSplashScreen();
-  }, [appIsReady]);
-
-  if (!appIsReady) {
+  if (!isAppReady) {
     return null;
   }
 
@@ -83,10 +46,10 @@ const App: React.FC = () => {
       <SafeAreaProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName={firstLaunch ? 'Onboarding' : 'Home'}
+            initialRouteName={isFirstLaunch ? 'Onboarding' : 'Home'}
             screenOptions={{ headerShown: false }}
           >
-            {firstLaunch ? (
+            {isFirstLaunch ? (
               <Stack.Screen name='Onboarding' component={OnboardingScreen} />
             ) : null}
             <Stack.Screen name='Home' component={HomeScreen} />
