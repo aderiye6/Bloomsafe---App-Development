@@ -1,21 +1,38 @@
+import { useMutation } from '@tanstack/react-query';
 import { Camera, CameraType } from 'expo-camera';
 import React, { useRef, useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { testWater } from '../../helpers';
 import NoCameraAccess from '../NoCameraAccess/NoCameraAccess';
+import Spinner from '../Spinner/Spinner';
 import TestResult from './TestResult/TestResult';
 
 const SnapChip: React.FC = () => {
   const [cameraReady, setCameraReady] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef<Camera>(null);
   const [picture, setPicture] = useState<string | null>(null);
+
+  const { mutate, isLoading, data } = useMutation({
+    mutationFn: async () => {
+      const waterPromise = testWater();
+      const result = await waterPromise;
+      return result;
+    },
+  });
 
   const takePicture = async () => {
     if (cameraRef.current) {
       const data = await cameraRef.current.takePictureAsync();
       setPicture(data.uri);
-      Alert.alert('Picture taken!');
+      setIsTesting(true);
+      mutate();
     }
+  };
+
+  const endTest = () => {
+    setIsTesting(false);
   };
 
   if (!permission) {
@@ -36,10 +53,19 @@ const SnapChip: React.FC = () => {
       {cameraReady ? (
         <View style={styles.overlay}>
           <View style={styles.testArea}>
-            <TestResult result={1} />
+            {isTesting ? (
+              <>
+                {isLoading ? <Spinner /> : null}
+                {data ? <TestResult result={data} endTest={endTest} /> : null}
+              </>
+            ) : null}
           </View>
           <View style={styles.shutterContainer}>
-            <TouchableOpacity onPress={takePicture} style={styles.shutter} />
+            <TouchableOpacity
+              onPress={takePicture}
+              disabled={isTesting}
+              style={styles.shutter}
+            />
           </View>
         </View>
       ) : null}
@@ -61,7 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   shutterContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
