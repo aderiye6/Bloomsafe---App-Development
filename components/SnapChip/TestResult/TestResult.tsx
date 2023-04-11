@@ -5,9 +5,10 @@ import Light from '../Light/Light';
 
 interface Props {
   result: number;
+  endTest: () => void;
 }
 
-const TestResult: React.FC<Props> = ({ result }) => {
+const TestResult: React.FC<Props> = ({ result, endTest }) => {
   const resultText =
     result < 4
       ? 'Water is really Bad to drink or play in'
@@ -23,7 +24,7 @@ const TestResult: React.FC<Props> = ({ result }) => {
         <Light color='red' active={result < 4} />
       </View>
       <Text style={styles.resultText}>{resultText}</Text>
-      <Button text='Done' onPress={() => undefined} />
+      <Button text='Done' onPress={endTest} />
     </View>
   );
 };
