@@ -4,6 +4,7 @@ import { Camera, CameraType } from 'expo-camera';
 import React, { useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { testWater } from '../../helpers';
+import useLocation from '../../hooks/useLocation';
 import PermissionDenied from '../PermissionDenied/PermissionDenied';
 import Spinner from '../Spinner/Spinner';
 import TestResult from './TestResult/TestResult';
@@ -11,10 +12,11 @@ import TestResult from './TestResult/TestResult';
 const SnapChip: React.FC = () => {
   const [cameraReady, setCameraReady] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const { locationAvailable } = useLocation();
   const [cameraPermission, requestCameraPermission] =
     Camera.useCameraPermissions();
   const cameraRef = useRef<Camera>(null);
-  const [picture, setPicture] = useState<string | null>(null);
+  const [_, setPicture] = useState<string | null>(null);
 
   const { mutate, isLoading, data } = useMutation({
     mutationFn: async () => {
@@ -41,8 +43,13 @@ const SnapChip: React.FC = () => {
     requestCameraPermission();
   }
 
-  if (!cameraPermission?.granted) {
-    return <PermissionDenied camera={!cameraPermission?.granted} />;
+  if (!cameraPermission?.granted || !locationAvailable) {
+    return (
+      <PermissionDenied
+        camera={!cameraPermission?.granted}
+        location={!locationAvailable}
+      />
+    );
   }
 
   return (
