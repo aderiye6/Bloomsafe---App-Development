@@ -12,7 +12,9 @@ export default function useFirstLaunch() {
         const appLaunched = await AsyncStorage.getItem('appLaunched');
         if (appLaunched === null || appLaunched === undefined) {
           AsyncStorage.setItem('appLaunched', 'false');
-        } else {
+        }
+
+        if (appLaunched === 'true') {
           setIsFirstLaunch(false);
         }
       } catch (e) {
