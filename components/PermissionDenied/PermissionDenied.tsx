@@ -2,10 +2,16 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BLOOM_GREEN } from '../../constants';
 
-const NoCameraAccess: React.FC = () => {
+interface Props {
+  camera?: boolean;
+  location?: boolean;
+}
+
+const PermissionDenied: React.FC<Props> = ({ camera, location }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>No access to camera</Text>
+      {camera ? <Text style={styles.text}>No access to camera</Text> : null}
+      {location ? <Text style={styles.text}>No access to location</Text> : null}
     </View>
   );
 };
@@ -23,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NoCameraAccess;
+export default PermissionDenied;
