@@ -9,7 +9,11 @@ import PermissionDenied from '../PermissionDenied/PermissionDenied';
 import Spinner from '../Spinner/Spinner';
 import TestResult from './TestResult/TestResult';
 
-const SnapChip: React.FC = () => {
+interface Props {
+  openHistory: () => void;
+}
+
+const SnapChip: React.FC<Props> = ({ openHistory }) => {
   const [cameraReady, setCameraReady] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const { locationAvailable } = useLocation();
@@ -37,6 +41,7 @@ const SnapChip: React.FC = () => {
 
   const endTest = () => {
     setIsTesting(false);
+    openHistory();
   };
 
   if (!cameraPermission) {
