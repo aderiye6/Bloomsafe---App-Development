@@ -6,29 +6,54 @@ interface Props {
   text: string;
   onPress: () => void;
   width?: number;
+  variant?: 'green' | 'white';
+  disabled?: boolean;
 }
 
-const Button: React.FC<Props> = ({ text, onPress, width = null }) => {
+const Button: React.FC<Props> = ({
+  text,
+  onPress,
+  width = null,
+  variant,
+  disabled,
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.button, width ? { width: width } : null]}
+      style={[
+        styles.button,
+        width ? { width: width } : null,
+        variant === 'white' ? styles.whiteButton : styles.greenButton,
+      ]}
+      disabled={disabled}
     >
-      <Text style={styles.text}>{text}</Text>
+      <Text style={variant === 'white' ? styles.greenText : styles.whiteText}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: BLOOM_GREEN,
+    borderColor: BLOOM_GREEN,
+    borderWidth: 1,
     borderRadius: 10,
     paddingVertical: 18,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
-  text: {
+  greenButton: {
+    backgroundColor: BLOOM_GREEN,
+  },
+  whiteButton: {
+    backgroundColor: BLOOM_WHITE,
+  },
+  whiteText: {
     color: BLOOM_WHITE,
+  },
+  greenText: {
+    color: BLOOM_GREEN,
   },
 });
 
