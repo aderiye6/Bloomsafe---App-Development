@@ -4,26 +4,34 @@ import Button from '../../Button/Button';
 import Light from '../Light/Light';
 
 interface Props {
-  result: number;
+  result: string;
   endTest: () => void;
 }
 
 const TestResult: React.FC<Props> = ({ result, endTest }) => {
   const resultText =
-    result < 4
+    result.toLowerCase() === 'really bad'
       ? 'Water is really Bad to drink or play in'
-      : result >= 4 && result < 6
-      ? 'Water is slightly safe to drink or play in'
-      : 'Water is safe to drink or play in';
+      : result.toLowerCase() === 'slightly bad'
+      ? 'Water is slightly bad to drink or play in'
+      : result.toLowerCase() === 'slightly safe'
+      ? 'Water is safe to drink or play in'
+      : '';
 
   return (
     <View style={styles.container}>
       <View style={styles.lightContainer}>
-        <Light color='green' active={result >= 6} />
-        <Light color='yellow' active={result >= 4 && result < 6} />
-        <Light color='red' active={result < 4} />
+        <Light
+          color='green'
+          active={result.toLowerCase() === 'slightly safe'}
+        />
+        <Light
+          color='yellow'
+          active={result.toLowerCase() === 'slightly bad'}
+        />
+        <Light color='red' active={result.toLowerCase() === 'really bad'} />
       </View>
-      <Text style={styles.resultText}>{resultText}</Text>
+      <Text style={styles.resultText}>{resultText || result}</Text>
       <Button text='Done' onPress={endTest} />
     </View>
   );
