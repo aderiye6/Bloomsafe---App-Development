@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createContext, useContext } from 'react';
+import { Alert } from 'react-native';
 import { useAuth } from './AuthContext';
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
@@ -34,6 +35,28 @@ const axiosContextFactory = () => {
     async (error) => {
       if (error.response.status === 401) {
         await logout();
+      }
+
+      if (error.response.data.error.message) {
+        Alert.alert('Error', error.response.data.error.message);
+      }
+
+      const developmentMode = process.env.NODE_ENV === 'development';
+      if (developmentMode) {
+        console.log(JSON.parse(JSON.stringify(error.response)));
+      }
+
+      return Promise.reject(error);
+    }
+  );
+
+  publicAxios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      if (error.response.data.error.message) {
+        Alert.alert('Error', error.response.data.error.message);
       }
 
       return Promise.reject(error);
