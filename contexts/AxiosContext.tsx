@@ -1,7 +1,10 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 import { createContext, useContext } from 'react';
 import { Alert } from 'react-native';
 import { useAuth } from './AuthContext';
+
+const baseURL = Constants.expoConfig?.extra?.baseURL;
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
 
@@ -9,11 +12,11 @@ const axiosContextFactory = () => {
   const { token, logout } = useAuth();
 
   const publicAxios = axios.create({
-    baseURL: 'https://bloomapp.herokuapp.com',
+    baseURL,
   });
 
   const privateAxios = axios.create({
-    baseURL: 'https://bloomapp.herokuapp.com',
+    baseURL,
   });
 
   privateAxios.interceptors.request.use(
@@ -71,10 +74,10 @@ const axiosContextFactory = () => {
 
 const initialstate: AxiosContextType = {
   publicAxios: axios.create({
-    baseURL: 'https://bloomapp.herokuapp.com',
+    baseURL,
   }),
   privateAxios: axios.create({
-    baseURL: 'https://bloomapp.herokuapp.com',
+    baseURL,
   }),
 };
 

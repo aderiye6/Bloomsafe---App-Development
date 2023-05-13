@@ -5,15 +5,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "BASE_URL": "https://bloomapp.herokuapp.com"
+      }
     },
     "preview": {
       "android": {
         "buildType": "apk"
       },
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "BASE_URL": "https://bloomapp.herokuapp.com"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "BASE_URL": "https://bloomapp.herokuapp.com"
+      }
+    }
   },
   "submit": {
     "production": {}
