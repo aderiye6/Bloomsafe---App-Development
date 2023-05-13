@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Login: undefined;
   ForgotPassword: undefined;
   ResetPassword: undefined;
+  ResultDetails: { result: TestResult };
 };
 
 export const mockUser = {
@@ -26,3 +27,18 @@ export const mockUser = {
 };
 
 export type User = typeof mockUser;
+
+export type TestResult = {
+  comment: string;
+  date: string;
+  id: number;
+  image: string;
+  latitude: string;
+  longitude: string;
+  metadata: {
+    file: ObjectConstructor[];
+    result: number;
+    score: number;
+    standard: number;
+  };
+};

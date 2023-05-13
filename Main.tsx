@@ -9,6 +9,7 @@ import LoginScreen from './screens/LoginScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ResultDetails from './screens/ResultDetails';
 import SnapChipScreen from './screens/SnapChipScreen';
 import TestHistory from './screens/TestHistory';
 import { RootStackParamList } from './types';
@@ -37,6 +38,7 @@ const Main: React.FC = () => {
         <Stack.Screen name='Home' component={HomeScreen} />
         <Stack.Screen name='SnapChip' component={SnapChipScreen} />
         <Stack.Screen name='History' component={TestHistory} />
+        <Stack.Screen name='ResultDetails' component={ResultDetails} />
         <Stack.Screen name='Profile' component={ProfileScreen} />
         <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
       </Stack.Navigator>
