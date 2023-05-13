@@ -1,10 +1,9 @@
 import axios from 'axios';
-import Constants from 'expo-constants';
 import { createContext, useContext } from 'react';
 import { Alert } from 'react-native';
 import { useAuth } from './AuthContext';
 
-const baseURL = Constants.expoConfig?.extra?.baseURL;
+const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
 
