@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Constants from 'expo-constants';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import AlertText from '../components/Text/AlertText';
@@ -9,7 +8,7 @@ import { RootStackParamList } from '../types';
 import Screen from './Screen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ResultDetails'>;
-const baseURL = Constants.expoConfig?.extra?.baseURL;
+const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
 
 const ResultDetails: React.FC<Props> = ({ route, navigation }) => {
   const { result } = route.params;

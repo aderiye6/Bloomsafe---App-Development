@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
-import Constants from 'expo-constants';
 import React from 'react';
 import {
   FlatList,
@@ -18,7 +17,7 @@ import { RootStackParamList, TestResult } from '../types';
 import ProtectedScreen from './ProtectedScreen';
 import Screen from './Screen';
 
-const baseURL = Constants.expoConfig?.extra?.baseURL;
+const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'History'>;
 
