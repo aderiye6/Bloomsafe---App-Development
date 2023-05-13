@@ -12,6 +12,14 @@ const PermissionDenied: React.FC<Props> = ({ camera, location }) => {
     <View style={styles.container}>
       {camera ? <Text style={styles.text}>No access to camera</Text> : null}
       {location ? <Text style={styles.text}>No access to location</Text> : null}
+      <Text style={styles.guideText}>
+        On iOS, you can enable camera and location access in Settings {'>'}{' '}
+        BloomSafe
+      </Text>
+      <Text style={styles.guideText}>
+        On Android, you can enable camera and location access in Settings {'>'}{' '}
+        Apps {'>'} BloomSafe {'>'} Permissions
+      </Text>
     </View>
   );
 };
@@ -21,11 +29,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 20,
   },
   text: {
     fontSize: 25,
     fontWeight: 'bold',
     color: BLOOM_GREEN,
+  },
+  guideText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingHorizontal: 20,
+    alignSelf: 'flex-start',
   },
 });
 

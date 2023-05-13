@@ -12,12 +12,11 @@ export default function useLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status === 'granted') {
         setLocationAvailable(true);
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
       } else {
         setLocationAvailable(false);
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
     })();
   }, []);
 
