@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import useResultTextDisplay from '../../../hooks/useResultTextDisplay';
 import Button from '../../Button/Button';
 import Light from '../Light/Light';
 
@@ -9,14 +10,7 @@ interface Props {
 }
 
 const TestResult: React.FC<Props> = ({ result, endTest }) => {
-  const resultText =
-    result.toLowerCase() === 'really bad'
-      ? 'Water is really Bad to drink or play in'
-      : result.toLowerCase() === 'slightly bad'
-      ? 'Water is slightly bad to drink or play in'
-      : result.toLowerCase() === 'slightly safe'
-      ? 'Water is safe to drink or play in'
-      : '';
+  const { resultTextDisplay } = useResultTextDisplay(result);
 
   return (
     <View style={styles.container}>
@@ -31,7 +25,7 @@ const TestResult: React.FC<Props> = ({ result, endTest }) => {
         />
         <Light color='red' active={result.toLowerCase() === 'really bad'} />
       </View>
-      <Text style={styles.resultText}>{resultText || result}</Text>
+      <Text style={styles.resultText}>{resultTextDisplay || result}</Text>
       <Button text='Done' onPress={endTest} />
     </View>
   );
