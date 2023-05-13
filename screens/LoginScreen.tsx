@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Button from '../components/Button/Button';
 import Input from '../components/Forms/Input';
 import PageSpinner from '../components/Spinner/PageSpinner';
@@ -71,17 +71,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             onPress={() => navigation.navigate('Register')}
             variant='white'
           />
-          <View
-            style={{
-              alignItems: 'center',
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPassword')}
-            >
-              <Text>Forgot password?</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </Screen>
