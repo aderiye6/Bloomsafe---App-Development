@@ -46,34 +46,9 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
         },
         maxBodyLength: Infinity,
       });
-      console.log('response: ', JSON.parse(JSON.stringify(response.data)));
       return response.data;
-
-      // try {
-      //   const response = await axios.post(
-      //     '/test',
-      //     {
-      //       image: data.imageUri,
-      //       longitude: data.longitude,
-      //       latitude: data.latitude,
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer cE02d2R2T1ZEa1F1ajgxd3h6K210MENPTSt0VjNPL1J5NUc4cHN0cGs3OD0=`,
-      //       },
-      //     }
-      //   );
-
-      //   console.log(JSON.parse(JSON.stringify(response)));
-      //   console.log(JSON.parse(JSON.stringify(response.data)));
-
-      //   return response.data;
-      // } catch (error) {
-      //   console.log(JSON.parse(JSON.stringify(error)));
-      // }
     },
-    onError: (error) => {
-      console.log(error);
+    onError: () => {
       setIsTesting(false);
     },
     onSuccess: (data) => {
@@ -82,8 +57,6 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
       }
     },
   });
-
-  console.log(data);
 
   const endTest = () => {
     setIsTesting(false);
