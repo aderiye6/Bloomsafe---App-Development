@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Camera, CameraType } from 'expo-camera';
 
+import { useIsFocused } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useAxios } from '../../contexts/AxiosContext';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const SnapChip: React.FC<Props> = ({ openHistory }) => {
+  const isFocused = useIsFocused();
   const [cameraReady, setCameraReady] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const { locationAvailable, location } = useLocation();
@@ -91,34 +93,38 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
   }
 
   return (
-    <Camera
-      style={styles.camera}
-      type={CameraType.back}
-      onCameraReady={() => setCameraReady(true)}
-      ref={cameraRef}
-    >
-      {cameraReady ? (
-        <View style={styles.overlay}>
-          <View style={styles.testArea}>
-            {isTesting ? (
-              <>
-                {isLoading ? <Spinner /> : null}
-                {data?.comment !== undefined ? (
-                  <TestResult result={data.comment} endTest={endTest} />
+    <View style={{ flex: 1 }}>
+      {isFocused ? (
+        <Camera
+          style={styles.camera}
+          type={CameraType.back}
+          onCameraReady={() => setCameraReady(true)}
+          ref={cameraRef}
+        >
+          {cameraReady ? (
+            <View style={styles.overlay}>
+              <View style={styles.testArea}>
+                {isTesting ? (
+                  <>
+                    {isLoading ? <Spinner /> : null}
+                    {data?.comment !== undefined ? (
+                      <TestResult result={data.comment} endTest={endTest} />
+                    ) : null}
+                  </>
                 ) : null}
-              </>
-            ) : null}
-          </View>
-          <View style={styles.shutterContainer}>
-            <TouchableOpacity
-              onPress={takePicture}
-              disabled={isTesting}
-              style={styles.shutter}
-            />
-          </View>
-        </View>
+              </View>
+              <View style={styles.shutterContainer}>
+                <TouchableOpacity
+                  onPress={takePicture}
+                  disabled={isTesting}
+                  style={styles.shutter}
+                />
+              </View>
+            </View>
+          ) : null}
+        </Camera>
       ) : null}
-    </Camera>
+    </View>
   );
 };
 
