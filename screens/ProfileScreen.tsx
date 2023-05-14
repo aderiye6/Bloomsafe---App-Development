@@ -1,12 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
 import Button from '../components/Button/Button';
 import Input from '../components/Forms/Input';
 import PageSpinner from '../components/Spinner/PageSpinner';
 import AlertText from '../components/Text/AlertText';
-import HeaderText from '../components/Text/HeaderText';
 import { useAuth } from '../contexts/AuthContext';
 import { useAxios } from '../contexts/AxiosContext';
 import { RootStackParamList } from '../types';
@@ -46,13 +45,18 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <Screen back={() => navigation.goBack()}>
+    <Screen back={() => navigation.goBack()} title='Settings'>
       <ProtectedScreen>
         {isLoading ? (
           <PageSpinner />
         ) : (
-          <View style={styles.container}>
-            <HeaderText text={'Settings'} />
+          <ScrollView
+            contentContainerStyle={{
+              justifyContent: 'center',
+              gap: 20,
+            }}
+            style={styles.container}
+          >
             <Input
               type='text'
               label='Full Name'
@@ -89,7 +93,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
               disabled={isChangingPassword}
             />
             <Button variant='white' text='Logout' onPress={() => logout()} />
-          </View>
+          </ScrollView>
         )}
       </ProtectedScreen>
     </Screen>
@@ -98,8 +102,6 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    gap: 20,
     paddingHorizontal: 20,
   },
 });
