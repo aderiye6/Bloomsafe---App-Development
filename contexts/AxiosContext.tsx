@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { createContext, useContext } from 'react';
-import { Alert } from 'react-native';
-import { useAuth } from './AuthContext';
+import axios from "axios";
+import { createContext, useContext } from "react";
+import { Alert } from "react-native";
+import { useAuth } from "./AuthContext";
 
-const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
+const baseURL = process.env.BASE_URL ?? "https://bloomapp.herokuapp.com";
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
 
@@ -39,13 +39,13 @@ const axiosContextFactory = () => {
         await logout();
       }
 
-      if (error.response.data.error.message) {
-        Alert.alert('Error', error.response.data.error.message);
+      if (error.response.data?.message) {
+        Alert.alert("Error", error.response?.data?.message);
       }
 
-      const developmentMode = process.env.NODE_ENV === 'development';
+      const developmentMode = process.env.NODE_ENV === "development";
       if (developmentMode) {
-        console.log(JSON.parse(JSON.stringify(error.response)));
+        console.log(error.response.config.data, "err");
       }
 
       return Promise.reject(error);
@@ -58,7 +58,7 @@ const axiosContextFactory = () => {
     },
     async (error) => {
       if (error.response.data.error.message) {
-        Alert.alert('Error', error.response.data.error.message);
+        Alert.alert("Error", error.response.data.error.message);
       }
 
       return Promise.reject(error);

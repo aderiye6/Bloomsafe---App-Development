@@ -1,98 +1,108 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet } from 'react-native';
-import Button from '../components/Button/Button';
-import Input from '../components/Forms/Input';
-import PageSpinner from '../components/Spinner/PageSpinner';
-import AlertText from '../components/Text/AlertText';
-import { useAuth } from '../contexts/AuthContext';
-import { useAxios } from '../contexts/AxiosContext';
-import { RootStackParamList } from '../types';
-import ProtectedScreen from './ProtectedScreen';
-import Screen from './Screen';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { Alert, ScrollView, StyleSheet } from "react-native";
+import Button from "../components/Button/Button";
+import Input from "../components/Forms/Input";
+import PageSpinner from "../components/Spinner/PageSpinner";
+import AlertText from "../components/Text/AlertText";
+import { useAuth } from "../contexts/AuthContext";
+import { useAxios } from "../contexts/AxiosContext";
+import { RootStackParamList } from "../types";
+import Spinner from "../Spinner/Spinner";
+import ProtectedScreen from "./ProtectedScreen";
+import Screen from "./Screen";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+type Props = NativeStackScreenProps<RootStackParamList, "Profile">;
 
 const ProfileScreen: React.FC<Props> = ({ navigation }) => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [isTesting, setIsTesting] = useState(false);
 
   const { logout } = useAuth();
   const { privateAxios } = useAxios();
-  const { isLoading, data } = useQuery(['profile'], async () => {
-    const response = await privateAxios.get('/profile');
+  const { isLoading, data } = useQuery(["profile"], async () => {
+    const response = await privateAxios.get("/profile");
     return response.data;
   });
 
   const { mutate, isLoading: isChangingPassword } = useMutation({
     mutationFn: async () => {
-      const response = await privateAxios.put('/password/change', {
+      const response = await privateAxios.put("/password/change", {
         old_password: oldPassword,
         new_password: newPassword,
         confirm_password: newPassword,
       });
       return response.data;
     },
+
+    onError: () => {
+      setIsTesting(false);
+    },
     onSuccess: (data) => {
-      if (data.message) Alert.alert('Password Changed', data.message);
+      setIsTesting(false);
+
+      if (data.message) Alert.alert("Password Changed", data.message);
     },
   });
 
   const handleUpdatePassword = () => {
     if (!oldPassword || !newPassword) return;
+    setIsTesting(true);
+
     mutate();
   };
 
   return (
-    <Screen back={() => navigation.goBack()} title='Settings'>
+    <Screen back={() => navigation.goBack()} title="Settings">
       <ProtectedScreen>
         {isLoading ? (
           <PageSpinner />
         ) : (
           <ScrollView
             contentContainerStyle={{
-              justifyContent: 'center',
+              justifyContent: "center",
               gap: 20,
             }}
             style={styles.container}
           >
             <Input
-              type='text'
-              label='Full Name'
+              type="text"
+              label="Full Name"
               value={data.fullname}
               onChange={() => {}}
             />
 
             <Input
-              type='email'
-              label='Email'
+              type="email"
+              label="Email"
               value={data.email}
               onChange={() => {}}
             />
 
-            <AlertText text='Update Password' />
+            <AlertText text="Update Password" />
 
             <Input
-              type='password'
-              label='Old Password'
+              type="password"
+              label="Old Password"
               value={oldPassword}
               onChange={(text) => setOldPassword(text)}
             />
 
             <Input
-              type='password'
-              label='New Password'
+              type="password"
+              label="New Password"
               value={newPassword}
               onChange={(text) => setNewPassword(text)}
             />
 
             <Button
-              text='Update Password'
+              text="Update Password"
               onPress={handleUpdatePassword}
               disabled={isChangingPassword}
             />
-            <Button variant='white' text='Logout' onPress={() => logout()} />
+            <Button variant="white" text="Logout" onPress={() => logout()} />
           </ScrollView>
         )}
       </ProtectedScreen>

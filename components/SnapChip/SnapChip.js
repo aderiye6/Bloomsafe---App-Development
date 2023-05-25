@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Camera, CameraType } from "expo-camera";
+
 import { useIsFocused } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -10,127 +11,51 @@ import Spinner from "../Spinner/Spinner";
 import TestResult from "./TestResult/TestResult";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
-import axios from "axios";
-import { useAuth } from "../../contexts/AuthContext";
 
-interface Props {
-  openHistory: () => void;
-}
-const SnapChip: React.FC<Props> = ({ openHistory }) => {
+
+
+const SnapChip = ({ openHistory }) => {
+
   const isFocused = useIsFocused();
   const [cameraReady, setCameraReady] = useState(false);
-  const [photo, setPhoto] = useState();
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
-  const [image, setImage] = useState();
   const [isTesting, setIsTesting] = useState(false);
   const { locationAvailable, location } = useLocation();
   const [cameraPermission, requestCameraPermission] =
     Camera.useCameraPermissions();
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  const cameraRef = useRef<Camera>(null);
-  const { token } = useAuth();
+  const cameraRef = useRef;
 
   const { privateAxios } = useAxios();
-
   const { mutate, isLoading, data } = useMutation({
-    mutationFn: async (data: {
-      imageUri: string;
-      longitude: number | undefined;
-      latitude: number | undefined;
-    }) => {
+    mutationFn: async () => {
       let localUri = data.imageUri;
-      // let localUri = photo?.uri;
       let filename = localUri.split("/").pop() || "";
 
-      //  Infer the type of the image
+      // Infer the type of the image
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
 
       const formData = new FormData();
-      formData.append("image", { uri: localUri });
-
+      formData.append("image", { uri: localUri, name: filename, type });
       formData.append("longitude", data.longitude?.toString() || "");
       formData.append("latitude", data.latitude?.toString() || "");
-      console.log("====================================");
-      console.log(formData);
-      console.log("====================================");
-      // let longitude = data.longitude;
-      // let latitude = data.latitude;
 
-      //   const response = await axios.post(
-      //     "https://bloomapp.herokuapp.com/test",
-      //     { latitude: latitude, longitude: longitude },
-      //     {
-      //       headers: {
-      //         "Content-Type": "multipart/form-data",
-      //         Authorization: `Bearer ${token}`,
-      //       },
-      //       maxBodyLength: Infinity,
-      //     }
-      //   );
-      //   console.log("====================================");
-      //   console.log(response.status);
-      //   console.log("====================================");
-      //   return response.data;
-      // },
-      // onError: () => {
-      //   setIsTesting(false);
-      // },
-      // onSuccess: (data) => {
-      //   if (data.result === undefined) {
-      //     setIsTesting(false);
-      //   }
-      // },
-
-      // const response = await axios.post(
-      //   "https://bloomapp.herokuapp.com/test",
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //     maxBodyLength: Infinity,
-      //   }
-      // );
-
-      const response = await fetch("https://bloomapp.herokuapp.com/test", {
-        method: "POST",
+      const response = await privateAxios.post("/test", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((responseData) => {
-          // Handle the response data
-          console.log(responseData, "kk");
-        })
-        .catch((error) => {
-          // Handle the error
-          console.error(error);
-        });
+        maxBodyLength: Infinity,
+      });
+      return response.data;
+    },
+    onError: () => {
+      setIsTesting(false);
+    },
+    onSuccess: (data) => {
+      if (data.result === undefined) {
+        setIsTesting(false);
+      }
     },
   });
-
-  const saveImageToGallery = async (imageUri: string) => {
-    try {
-      const asset = await MediaLibrary.createAssetAsync(imageUri);
-      const album = await MediaLibrary.getAlbumAsync("Camera");
-
-      if (album) {
-        // await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-      } else {
-        await MediaLibrary.createAlbumAsync("Camera", asset, false);
-      }
-
-      console.log("Image saved to gallery!");
-    } catch (error) {
-      console.error("Error saving image to gallery:", error);
-    }
-  };
 
   const endTest = () => {
     setIsTesting(false);
@@ -151,14 +76,15 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
       const picture = await cameraRef.current.takePictureAsync({
         quality: 0.1,
       });
-      saveImageToGallery(picture.uri);
+      requestPermissions();
 
+      // Save image to gallery
+      await MediaLibrary.saveToLibraryAsync(picture.uri);
       setIsTesting(true);
 
-      setLongitude(location?.coords.longitude);
-      setLatitude(location?.coords.latitude);
-      setPhoto(picture.uri);
-
+      console.log("====================================");
+      console.log(picture.uri);
+      console.log("====================================");
       mutate({
         imageUri: picture.uri,
         longitude: location?.coords.longitude,
@@ -169,10 +95,6 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
 
   if (!cameraPermission) {
     requestCameraPermission();
-  }
-
-  if (!permissionResponse) {
-    requestPermission();
   }
 
   if (!cameraPermission?.granted || !locationAvailable) {
