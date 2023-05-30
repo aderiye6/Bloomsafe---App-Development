@@ -11,10 +11,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#76bc3f"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
+    
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
@@ -25,7 +28,11 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE"
+        "android.permission.FOREGROUND_SERVICE",
+        "ndroid.permission.WRITE_EXTERNAL_STORAGE",
+        "ndroid.permission.READ_EXTERNAL_STORAGE",
+        "ndroid.permission. MEDIA_LIBRARY"
+
       ],
       "package": "me.afeezgl.bloomsafe"
     },
@@ -40,6 +47,14 @@
         }
       ],
       [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
@@ -48,7 +63,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "64ccdc8a-6616-4a88-98af-a57596a00970"
+        "projectId": "d9b3218a-a00d-4e12-b3df-025758969f8f"
       }
     }
   }

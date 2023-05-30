@@ -9,6 +9,8 @@ import useLocation from '../../hooks/useLocation';
 import PermissionDenied from '../PermissionDenied/PermissionDenied';
 import Spinner from '../Spinner/Spinner';
 import TestResult from './TestResult/TestResult';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 
 interface Props {
   openHistory: () => void;
@@ -21,6 +23,7 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
   const { locationAvailable, location } = useLocation();
   const [cameraPermission, requestCameraPermission] =
     Camera.useCameraPermissions();
+    const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const cameraRef = useRef<Camera>(null);
 
   const { privateAxios } = useAxios();
@@ -68,14 +71,40 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
   const takePicture = async () => {
     if (cameraRef.current) {
       const picture = await cameraRef.current.takePictureAsync({
-        quality: 0.1,
+        quality: 0.8,
       });
       setIsTesting(true);
+   const {uri}  =picture
+      if (permissionResponse?.status === 'granted') {
+       if(uri){
+        savePictureToGallery(uri);
+       }
+      } else {
+        requestPermission();
+      }
       mutate({
         imageUri: picture.uri,
         longitude: location?.coords.longitude,
         latitude: location?.coords.latitude,
       });
+    }
+  };
+
+  const savePictureToGallery = async (pictureUri:any) => {
+    try {
+      const temporaryFileUri = FileSystem.cacheDirectory + 'temp.jpg';
+
+      await FileSystem.copyAsync({
+        from: pictureUri,
+        to: temporaryFileUri,
+      });
+
+      const asset:any = await MediaLibrary.createAssetAsync(temporaryFileUri);
+      await MediaLibrary.saveToLibraryAsync(asset);
+
+      console.log('Image saved to gallery!');
+    } catch (error) {
+      console.log('Error saving image:', error);
     }
   };
 
