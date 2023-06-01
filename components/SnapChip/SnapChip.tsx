@@ -9,9 +9,12 @@ import useLocation from '../../hooks/useLocation';
 import PermissionDenied from '../PermissionDenied/PermissionDenied';
 import Spinner from '../Spinner/Spinner';
 import TestResult from './TestResult/TestResult';
-import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
-
+import * as ImagePicker from 'expo-image-picker';
+import { useUploadDocumentMutation } from '../../contexts/api';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
+import Toast from 'react-native-toast-message';
 interface Props {
   openHistory: () => void;
 }
@@ -20,77 +23,169 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
   const isFocused = useIsFocused();
   const [cameraReady, setCameraReady] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [data, setdata] = useState<any>(null)
+
+  /**
+ * Retrieves the current location and location availability using the useLocation hook.
+ * The `locationAvailable` variable represents the availability status of the location.
+ * The `location` variable contains the current location information, if available.
+ */
   const { locationAvailable, location } = useLocation();
+  const [ uploadDocument , {isLoading}]=useUploadDocumentMutation()
+  /**
+ * Initializes camera permission state and permission request function using the Camera module.
+ * The `cameraPermission` variable represents the current camera permission status.
+ * The `requestCameraPermission` function can be called to request camera permissions.
+ */
   const [cameraPermission, requestCameraPermission] =
     Camera.useCameraPermissions();
+
+    /**
+ * Initializes permission response state and permission request function using the MediaLibrary module.
+ * The `permissionResponse` variable represents the current permission status for accessing media library.
+ * The `requestPermission` function can be called to request permission for accessing the media library.
+ */
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+
+
+    /**
+ * A ref to the Camera component.
+ * It is initialized as null and can be used to access and manipulate the camera component.
+ */
   const cameraRef = useRef<Camera>(null);
 
-  const { privateAxios } = useAxios();
-  const { mutate, isLoading, data } = useMutation({
-    mutationFn: async (data: {
-      imageUri: string;
-      longitude: number | undefined;
-      latitude: number | undefined;
-    }) => {
-      let localUri = data.imageUri;
-      let filename = localUri.split('/').pop() || '';
 
-      // Infer the type of the image
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      const formData = new FormData();
-      formData.append('image', { uri: localUri, name: filename, type });
-      formData.append('longitude', data.longitude?.toString() || '');
-      formData.append('latitude', data.latitude?.toString() || '');
-
-      const response = await privateAxios.post('/test', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        maxBodyLength: Infinity,
-      });
-      return response.data;
-    },
-    onError: () => {
-      setIsTesting(false);
-    },
-    onSuccess: (data) => {
-      if (data.result === undefined) {
-        setIsTesting(false);
+  /**
+ * Handles the test process for an image by performing the following actions:
+ * 1. Retrieves information about the image file using the provided image URI.
+ * 2. If the file does not exist, logs an error message and returns.
+ * 3. Manipulates the image by resizing it to a width of 800 pixels and applying compression.
+ * 4. Extracts the file extension from the manipulated image's URI.
+ * 5. Creates a FormData object and appends the compressed image, longitude, and latitude to it.
+ * 6. Calls the 'uploadDocument' function with the FormData and unwraps the result.
+ * 7. Updates the 'data' state with the result.
+ * 8. Sets 'isTesting' state to true.
+ * 9. If the result does not have a 'comment' property, shows an info toast with the result message.
+ * 10. If an error occurs during the process, shows an error toast with the error message.
+ *
+ * @param {any} data - The data object containing the image URI, longitude, and latitude.
+ */
+  const testHandle = async (data: any) => {
+    try {
+      const fileInfo: any = await FileSystem.getInfoAsync(data?.imageUri);
+      // console.log(fileInfo, "fileinfo");
+      if (!fileInfo.exists) {
+        console.log('Image file does not exist');
+        return;
       }
-    },
-  });
+  
+      const compressedImage = await ImageManipulator.manipulateAsync(
+        fileInfo.uri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.5 } // Set the desired compression quality (0.5 represents 50% compression)
+      );
+  
+      const imageUriParts = compressedImage.uri.split('.');
+      const fileExtension = imageUriParts[imageUriParts.length - 1];
+  
+      const formData = new FormData();
+      formData.append('image', {
+        uri: compressedImage.uri,
+        name: `image.${fileExtension}`,
+        type: `image/${fileExtension}`,
+      });
+  
+      formData.append('longitude', '3.3521664');
+      formData.append('latitude', '6.5765376');
+  
+      const res = await uploadDocument(formData).unwrap();
+      // console.log(res, 'ressss');
+      setdata(res)
+      setIsTesting(true)
+      if(!res?.comment){
+        Toast.show({
+          type: 'info',
+          text1: '',
+          text2: res
+        });
+      }
+     
+    } catch (error:any) {
+      // console.log(error, 'error uuuuuu');
+      Toast.show({
+        type: 'error',
+        text1: '',
+        text2: error ??''
+      });
+    }
+  }
 
+
+  /**
+ * Takes a picture using the camera reference and performs the following actions:
+ * 1. Retrieves the picture with a specified quality setting.
+ * 2. Extracts the URI from the picture.
+ * 3. If the URI is available, creates a data object with the image URI, longitude, and latitude.
+ * 4. Calls the `testHandle` function with the data object as an argument.
+ * 5. Checks the permission status and saves the picture to the gallery if permission is granted.
+ *    Otherwise, requests permission to save the picture.
+ */
+  const takePicture = async () => {
+    
+    if (cameraRef.current) {
+      const picture = await cameraRef.current.takePictureAsync({
+        quality: 0.5,
+      });
+
+    
+   const {uri}  =picture
+   if(uri){
+    const data =  {
+      imageUri: uri,
+      longitude: location?.coords.longitude,
+      latitude: location?.coords.latitude,
+    }
+    testHandle(
+  data)
+
+
+
+    if (permissionResponse?.status === 'granted') {
+      savePictureToGallery(uri);
+    
+      } else {
+        requestPermission();
+      }
+   }
+    
+   
+     
+    }
+  };
+
+
+  /**
+ * Ends the current test by setting the 'isTesting' state to false
+ * and calling the 'openHistory' function to navigate to the test history.
+ */
   const endTest = () => {
     setIsTesting(false);
     openHistory();
   };
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      const picture = await cameraRef.current.takePictureAsync({
-        quality: 0.8,
-      });
-      setIsTesting(true);
-   const {uri}  =picture
-      if (permissionResponse?.status === 'granted') {
-       if(uri){
-        savePictureToGallery(uri);
-       }
-      } else {
-        requestPermission();
-      }
-      mutate({
-        imageUri: picture.uri,
-        longitude: location?.coords.longitude,
-        latitude: location?.coords.latitude,
-      });
-    }
-  };
+/**
+ * Saves a picture to the device's gallery by performing the following actions:
+ * 1. Creates a temporary file URI in the cache directory.
+ * 2. Copies the picture from the specified URI to the temporary file URI.
+ * 3. Creates an asset using the temporary file URI.
+ * 4. Saves the asset to the device's media library.
+ * 5. (Optional) Logs a success message if the image is saved to the gallery.
+ * 6. (Optional) Logs an error message if there is an error saving the image.
+ *
+ * @param {string} pictureUri - The URI of the picture to be saved to the gallery.
+ */
 
-  const savePictureToGallery = async (pictureUri:any) => {
+  const savePictureToGallery = async (pictureUri:string) => {
     try {
       const temporaryFileUri = FileSystem.cacheDirectory + 'temp.jpg';
 
@@ -102,9 +197,9 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
       const asset:any = await MediaLibrary.createAssetAsync(temporaryFileUri);
       await MediaLibrary.saveToLibraryAsync(asset);
 
-      console.log('Image saved to gallery!');
+      // console.log('Image saved to gallery!');
     } catch (error) {
-      console.log('Error saving image:', error);
+      // console.log('Error saving image:', error);
     }
   };
 
@@ -133,9 +228,10 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
           {cameraReady ? (
             <View style={styles.overlay}>
               <View style={styles.testArea}>
+              {isLoading ? <Spinner /> : null}
+
                 {isTesting ? (
                   <>
-                    {isLoading ? <Spinner /> : null}
                     {data?.comment !== undefined ? (
                       <TestResult result={data.comment} endTest={endTest} />
                     ) : null}
@@ -145,7 +241,7 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
               <View style={styles.shutterContainer}>
                 <TouchableOpacity
                   onPress={takePicture}
-                  disabled={isTesting}
+                  // disabled={isTesting}
                   style={styles.shutter}
                 />
               </View>

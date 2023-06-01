@@ -15,7 +15,10 @@ import { useAppState } from './hooks/useAppState';
 import useFirstLaunch from './hooks/useFirstLaunch';
 import { useOnlineManager } from './hooks/useOnlineManager';
 import { RootStackParamList } from './types';
+import { Provider } from 'react-redux';
+import { store } from './contexts/store';
 
+import Toast from 'react-native-toast-message';
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
@@ -41,6 +44,10 @@ const App: React.FC = () => {
   }
 
   return (
+    <>
+      <Toast />
+    <Provider store={store}>
+
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AxiosProvider>
@@ -50,6 +57,9 @@ const App: React.FC = () => {
         </AxiosProvider>
       </AuthProvider>
     </QueryClientProvider>
+    </Provider>
+    </>
+
   );
 };
 

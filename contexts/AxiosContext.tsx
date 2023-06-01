@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 import { Alert } from 'react-native';
 import { useAuth } from './AuthContext';
 
-const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
+const baseURL =  "https://bloomapp.herokuapp.com";
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
 
@@ -39,9 +39,9 @@ const axiosContextFactory = () => {
         await logout();
       }
 
-      if (error.response.data.error.message) {
-        Alert.alert('Error', error.response.data.error.message);
-      }
+      // if (error.response.data.error.message) {
+      //   Alert.alert('Error', error.response.data.error.message);
+      // }
 
       const developmentMode = process.env.NODE_ENV === 'development';
       if (developmentMode) {

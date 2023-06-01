@@ -13,7 +13,7 @@ import ResultDetails from './screens/ResultDetails';
 import SnapChipScreen from './screens/SnapChipScreen';
 import TestHistory from './screens/TestHistory';
 import { RootStackParamList } from './types';
-
+import Toast from 'react-native-toast-message'
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
@@ -21,6 +21,7 @@ const Main: React.FC = () => {
   const { token } = useAuth();
 
   return (
+   <>
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
@@ -43,6 +44,8 @@ const Main: React.FC = () => {
         <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>
+    <Toast />
+   </>
   );
 };
 
