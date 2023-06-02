@@ -13,9 +13,9 @@ interface Props {
 
 const onboardingSections = [
   {
-    header: 'Drink Safe water',
+    header: 'Play in Safe water',
     details:
-      'Ensure your well-being by consuming safe, clean drinking water.',
+      'Ensure your well-being by engaging in activities in clean, safe water environments.',
     image: require('../../assets/onboarding/onboarding1.png'),
   },
   {
