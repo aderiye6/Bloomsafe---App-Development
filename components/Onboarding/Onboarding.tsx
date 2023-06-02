@@ -15,19 +15,19 @@ const onboardingSections = [
   {
     header: 'Drink Safe water',
     details:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      'Ensure your well-being by consuming safe, clean drinking water.',
     image: require('../../assets/onboarding/onboarding1.png'),
   },
   {
     header: 'Confirm your water standards',
     details:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      'Verify the adherence to established water quality standards for your peace of mind.',
     image: require('../../assets/onboarding/onboarding2.png'),
   },
   {
     header: 'Test your water',
     details:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      'Assess the quality of your water through comprehensive testing for safety and peace of mind.',
     image: require('../../assets/onboarding/onboarding3.png'),
   },
 ];

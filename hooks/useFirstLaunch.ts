@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 export default function useFirstLaunch() {
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
   const [isAppReady, setIsAppReady] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const checkFirstLaunch = async () => {
       try {
         const appLaunched = await AsyncStorage.getItem('appLaunched');

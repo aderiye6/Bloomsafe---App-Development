@@ -17,7 +17,7 @@ import Toast from 'react-native-toast-message'
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
-  const { isFirstLaunch } = useFirstLaunch();
+  const { isFirstLaunch, isAppReady } = useFirstLaunch();
   const { token } = useAuth();
 
   return (
@@ -25,7 +25,7 @@ const Main: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
-          isFirstLaunch ? 'Onboarding' : token ? 'Home' : 'Register'
+          isAppReady && isFirstLaunch ? 'Onboarding' : token ? 'Home' : 'Register'
         }
         screenOptions={{ headerShown: false }}
       >
