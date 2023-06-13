@@ -134,12 +134,20 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
     
     if (cameraRef.current) {
       const picture = await cameraRef.current.takePictureAsync({
-        quality: 0.5,
+        quality: 1,
       });
 
     
    const {uri}  =picture
    if(uri){
+
+    if (permissionResponse?.status === 'granted') {
+      savePictureToGallery(uri);
+    
+      } else {
+        requestPermission();
+      }
+
     const data =  {
       imageUri: uri,
       longitude: location?.coords.longitude,
@@ -150,12 +158,6 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
 
 
 
-    if (permissionResponse?.status === 'granted') {
-      savePictureToGallery(uri);
-    
-      } else {
-        requestPermission();
-      }
    }
     
    
@@ -256,6 +258,8 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
 const styles = StyleSheet.create({
   camera: {
     flex: 1,
+    justifyContent:'center',
+    alignItems:'center'
   },
   overlay: {
     flex: 1,
