@@ -107,7 +107,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
             />
             <Button variant='white' text='Logout' onPress={() => {
               logout()
-              navigation.replace('Login')
+              // navigation.replace('Login')
             }} />
           </ScrollView>
         )}

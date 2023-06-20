@@ -37,7 +37,7 @@ const Main: React.FC = () => {
         {!token ? (
           <Stack.Screen name='Register' component={RegisterScreen} />
         ) : null}
-         <Stack.Screen name='Login' component={LoginScreen} /> 
+        {!token ? <Stack.Screen name='Login' component={LoginScreen} /> : null}
         <Stack.Screen name='HomeScreen' 
          component={BottomStack} />
         <Stack.Screen name='SnapChip' component={SnapChipScreen} />
