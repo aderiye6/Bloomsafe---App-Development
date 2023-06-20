@@ -9,6 +9,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   ResetPassword: undefined;
   ResultDetails: { result: TestResult };
+  HomeScreen:undefined
 };
 
 export const mockUser = {

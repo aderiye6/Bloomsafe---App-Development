@@ -6,6 +6,7 @@ export default function useLocation() {
     null
   );
   const [locationAvailable, setLocationAvailable] = useState(false);
+  const [address, setaddress] = useState<any>()
 
   useEffect(() => {
     (async () => {
@@ -13,6 +14,14 @@ export default function useLocation() {
       if (status === 'granted') {
         setLocationAvailable(true);
         let location = await Location.getCurrentPositionAsync({});
+        const { latitude, longitude } = location.coords;
+
+      // Convert latitude and longitude to address using reverse geocoding
+      const address = await Location.reverseGeocodeAsync({ latitude, longitude });
+      if(address){
+ const addr = address[0]
+ setaddress(addr)
+      }
         setLocation(location);
       } else {
         setLocationAvailable(false);
@@ -23,5 +32,6 @@ export default function useLocation() {
   return {
     location,
     locationAvailable,
+    address
   };
 }

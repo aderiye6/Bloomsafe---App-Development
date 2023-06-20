@@ -8,13 +8,11 @@ import Screen from './Screen';
 type Props = NativeStackScreenProps<RootStackParamList, 'SnapChip'>;
 
 const SnapChipScreen: React.FC<Props> = ({ navigation }) => {
-  const openHistory = () => {
-    navigation.navigate('History');
-  };
+ 
   return (
     <Screen>
       <ProtectedScreen>
-        <SnapChip openHistory={openHistory} />
+        <SnapChip  navigation={ navigation} />
       </ProtectedScreen>
     </Screen>
   );

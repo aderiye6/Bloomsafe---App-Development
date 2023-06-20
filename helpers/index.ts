@@ -7,23 +7,28 @@ export const testWater = () =>
     }, 3000);
   });
   export function formatError(response:any) {
-    console.log(response?.error, "respose")
   
+  // console.log(response, "response")
     if (response?.data) {
       const { data, errors, title, message, error } = response.data
+  // console.log(error, "errrrrrrrrr")
+      if (error) {
+        return error
+      }
   
+
       if (data) {
-        return Object.values(data).join(', ')
+        return data
       }
   
      
       if (errors) {
-        return Object.values(errors).join(', ')
+        return errors
       }
   
       return message || title
     }
   
-    return response?.error?.message ?? response?.error ?? 'Something went wrong!'
+    // return response?.error?.message ?? response?.error ?? 'Something went wrong!'
   }
   

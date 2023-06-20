@@ -6,7 +6,7 @@ export default function useAddressFromLocation(
   longitude: string
 ) {
   const [address, setAddress] = useState('');
-
+console.log(address, "addresss")
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -15,6 +15,7 @@ export default function useAddressFromLocation(
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
         });
+
 
         let addressText = `${address[0].streetNumber || ''} ${
           address[0].street || ''
@@ -25,7 +26,7 @@ export default function useAddressFromLocation(
         setAddress(addressText);
       }
     })();
-  }, [longitude, latitude]);
+  }, [longitude, latitude, address]);
 
   return { address };
 }

@@ -11,6 +11,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useAxios } from '../contexts/AxiosContext';
 import { RootStackParamList } from '../types';
 import Screen from './Screen';
+import { useLoginAccountMutation } from '../contexts/api';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -18,25 +20,36 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { publicAxios } = useAxios();
-  const { login } = useAuth();
 
-  const { isLoading, mutate } = useMutation({
-    mutationFn: async () => {
-      const response = await publicAxios.post('/login', {
+  const { login } = useAuth();
+ const [loginAccount, {isLoading}]= useLoginAccountMutation()
+
+  const handleLogin = async() => {
+    if (!email || !password) return;
+    else{
+      const d={
+     
         email,
         password,
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      if (data.token) login(data.token);
-    },
-  });
-
-  const handleLogin = () => {
-    if (!email || !password) return;
-    mutate();
+       
+      }
+    
+      try {
+         const data:any = await loginAccount(d).unwrap()
+        if(data){
+          const token = data?.token
+          login(token)
+          navigation.replace('HomeScreen')
+        }
+      } catch (error:any) {
+        // console.log(error)
+        Toast.show({
+          type: 'error',
+          text1: '',
+          text2: error?.error ??''
+        });
+      }
+    }
   };
 
   if (isLoading) return <PageSpinner />;

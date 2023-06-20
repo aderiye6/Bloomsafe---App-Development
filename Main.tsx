@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { useAuth } from './contexts/AuthContext';
 import useFirstLaunch from './hooks/useFirstLaunch';
@@ -13,7 +14,8 @@ import ResultDetails from './screens/ResultDetails';
 import SnapChipScreen from './screens/SnapChipScreen';
 import TestHistory from './screens/TestHistory';
 import { RootStackParamList } from './types';
-import Toast from 'react-native-toast-message'
+import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
@@ -25,7 +27,7 @@ const Main: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
-          isAppReady && isFirstLaunch ? 'Onboarding' : token ? 'Home' : 'Register'
+          isAppReady && isFirstLaunch ? 'Onboarding' : token ? 'HomeScreen' : 'Login'
         }
         screenOptions={{ headerShown: false }}
       >
@@ -35,10 +37,11 @@ const Main: React.FC = () => {
         {!token ? (
           <Stack.Screen name='Register' component={RegisterScreen} />
         ) : null}
-        {!token ? <Stack.Screen name='Login' component={LoginScreen} /> : null}
-        <Stack.Screen name='Home' component={HomeScreen} />
+         <Stack.Screen name='Login' component={LoginScreen} /> 
+        <Stack.Screen name='HomeScreen' 
+         component={BottomStack} />
         <Stack.Screen name='SnapChip' component={SnapChipScreen} />
-        <Stack.Screen name='History' component={TestHistory} />
+        {/* <Stack.Screen name='History' component={TestHistory} /> */}
         <Stack.Screen name='ResultDetails' component={ResultDetails} />
         <Stack.Screen name='Profile' component={ProfileScreen} />
         <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
@@ -50,3 +53,46 @@ const Main: React.FC = () => {
 };
 
 export default Main;
+
+
+const Tab = createBottomTabNavigator<RootStackParamList>();
+
+const BottomStack= () => (
+  
+
+
+  <Tab.Navigator
+      
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? 'home' : 'home-outline'} // Active and inactive icon names
+                size={size}
+                color={color}
+              />
+            ),
+            tabBarLabel: 'Home', // Custom tab label
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="History"
+          component={TestHistory}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? 'time' : 'time-outline'} // Active and inactive icon names
+                size={size}
+                color={color}
+              />
+            ),
+            tabBarLabel: 'History', // Custom tab label
+            headerShown: false,
+          }}
+        />
+      </Tab.Navigator>
+);

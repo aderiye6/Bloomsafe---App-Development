@@ -11,6 +11,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useAxios } from '../contexts/AxiosContext';
 import { RootStackParamList } from '../types';
 import Screen from './Screen';
+import { useRegisterAccountMutation } from '../contexts/api';
+import Toast from 'react-native-toast-message';
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -18,27 +21,36 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { publicAxios } = useAxios();
-  const { login } = useAuth();
-
-  const { isLoading, mutate } = useMutation({
-    mutationFn: async () => {
-      const response = await publicAxios.post('/register', {
-        fullname: fullName,
+  const [username, setUsername] = useState('')
+  const [registerAccount, {isLoading}] = useRegisterAccountMutation()
+  const { login} = useAuth()
+  const handleSignup = async() => {
+    if (!fullName || !email || !password || !username) return;
+    else{
+      const d={
+        fullname:fullName,
         email,
         password,
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      if (data.token) login(data.token);
-    },
-  });
-
-  const handleSignup = () => {
-    if (!fullName || !email || !password) return;
-    mutate();
+        username
+      }
+    
+      try {
+         const data:any = await registerAccount(d).unwrap()
+        if(data){
+          const token = data[0]?.token
+          login(token)
+          navigation.replace('HomeScreen')
+        }
+      } catch (error:any) {
+        // console.log(error)
+        Toast.show({
+          type: 'error',
+          text1: '',
+          text2: error?.error ??''
+        });
+      }
+    }
+   
   };
 
   if (isLoading) return <PageSpinner />;
@@ -53,6 +65,12 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
           label='Full Name'
           value={fullName}
           onChange={(text) => setFullName(text)}
+        />
+         <Input
+          type='text'
+          label='Username'
+          value={username}
+          onChange={(text) => setUsername(text)}
         />
         <Input
           type='email'

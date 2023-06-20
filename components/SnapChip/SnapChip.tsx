@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Camera, CameraType } from 'expo-camera';
 
 import { useIsFocused } from '@react-navigation/native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useAxios } from '../../contexts/AxiosContext';
 import useLocation from '../../hooks/useLocation';
@@ -15,11 +15,13 @@ import { useUploadDocumentMutation } from '../../contexts/api';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import Toast from 'react-native-toast-message';
+import * as Location from 'expo-location';
+
 interface Props {
-  openHistory: () => void;
+  navigation:any;
 }
 
-const SnapChip: React.FC<Props> = ({ openHistory }) => {
+const SnapChip: React.FC<Props> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [cameraReady, setCameraReady] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
@@ -30,8 +32,13 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
  * The `locationAvailable` variable represents the availability status of the location.
  * The `location` variable contains the current location information, if available.
  */
-  const { locationAvailable, location } = useLocation();
+  const { locationAvailable, location, address } = useLocation();
   const [ uploadDocument , {isLoading}]=useUploadDocumentMutation()
+
+
+
+
+
   /**
  * Initializes camera permission state and permission request function using the Camera module.
  * The `cameraPermission` variable represents the current camera permission status.
@@ -95,27 +102,39 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
         type: `image/${fileExtension}`,
       });
   
-      formData.append('longitude', '3.3521664');
-      formData.append('latitude', '6.5765376');
+      formData.append('country', address?.country);
+      formData.append('city',  address?.city);
+      formData.append('region', address?.region);
+      formData.append('postalCode', address?.postalCode);
+      formData.append('street', address?.city);
+
+
+
   
       const res = await uploadDocument(formData).unwrap();
       // console.log(res, 'ressss');
-      setdata(res)
-      setIsTesting(true)
-      if(!res?.comment){
+      // setdata(res)
+      // setIsTesting(true)
+      if(res){
+       if(res?.message){
         Toast.show({
           type: 'info',
           text1: '',
-          text2: res
+          text2: res?.message
         });
+       }
+       else{
+      // console.log(JSON.stringify(res), 'ressss');
+      navigation.navigate('ResultDetails', { result: res?.data })
+       }
       }
      
     } catch (error:any) {
-      // console.log(error, 'error uuuuuu');
+      console.log(error, 'error uuuuuu');
       Toast.show({
         type: 'error',
         text1: '',
-        text2: error ??''
+        text2: error?.data ??''
       });
     }
   }
@@ -131,13 +150,10 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
  *    Otherwise, requests permission to save the picture.
  */
   const takePicture = async () => {
-    
     if (cameraRef.current) {
       const picture = await cameraRef.current.takePictureAsync({
         quality: 1,
       });
-
-    
    const {uri}  =picture
    if(uri){
 
@@ -147,11 +163,9 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
       } else {
         requestPermission();
       }
-
     const data =  {
       imageUri: uri,
-      longitude: location?.coords.longitude,
-      latitude: location?.coords.latitude,
+     
     }
     testHandle(
   data)
@@ -231,14 +245,6 @@ const SnapChip: React.FC<Props> = ({ openHistory }) => {
             <View style={styles.overlay}>
               <View style={styles.testArea}>
               {isLoading ? <Spinner /> : null}
-
-                {isTesting ? (
-                  <>
-                    {data?.comment !== undefined ? (
-                      <TestResult result={data.comment} endTest={endTest} />
-                    ) : null}
-                  </>
-                ) : null}
               </View>
               <View style={styles.shutterContainer}>
                 <TouchableOpacity

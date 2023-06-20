@@ -17,7 +17,7 @@ import { RootStackParamList, TestResult } from '../types';
 import ProtectedScreen from './ProtectedScreen';
 import Screen from './Screen';
 
-const baseURL = process.env.BASE_URL ?? 'https://bloomapp.herokuapp.com';
+const baseURL = process.env.BASE_URL ?? 'https://bloom-safe-af07b9d4838b.herokuapp.com/storage/images';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'History'>;
 
@@ -40,6 +40,8 @@ const TestHistory: React.FC<Props> = ({ navigation }) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              paddingHorizontal:20,
+              paddingTop:5
             }}
           >
             <View>
@@ -64,7 +66,10 @@ const TestHistory: React.FC<Props> = ({ navigation }) => {
             >
               Test History
             </Text>
-            {isLoading && <Spinner />}
+            {isLoading && <View style={{flex:1, justifyContent:'center', alignContent:'center'}}>
+              <Spinner />
+            </View>
+              }
 
             {data && data?.length < 1 ? (
               <Text style={{ textAlign: 'center', fontSize: 16 }}>
@@ -103,10 +108,7 @@ const TestHistory: React.FC<Props> = ({ navigation }) => {
             ) : null}
           </View>
 
-          <Button
-            text='Take New Test'
-            onPress={() => navigation.navigate('SnapChip')}
-          />
+     
         </View>
       </ProtectedScreen>
     </Screen>
@@ -116,9 +118,8 @@ const TestHistory: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+   
+   
   },
 });
 

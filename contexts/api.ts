@@ -5,7 +5,7 @@ import { formatError } from '../helpers';
 
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "https://bloomapp.herokuapp.com",
+    baseUrl: "https://bloom-safe-af07b9d4838b.herokuapp.com/api",
     prepareHeaders: async(headers, { getState }) => {
         const token = await AsyncStorage.getItem('token');
       // console.log(token)
@@ -36,13 +36,65 @@ export const Api = createApi({
         },
         transformErrorResponse: (response, meta, arg) => ({
             message: formatError(response),
-            error: response.data,
+            error: formatError(response),
           }),
-    
+      }),
+      registerAccount: builder.mutation({
+        query(data) {
+          return {
+            url: `/register`,
+            method: "POST",
+            body: data
+
+          };
+
+        },
+        transformErrorResponse: (response, meta, arg) => ({
+          message: formatError(response),
+          error: formatError(response),
+        }),
+       
+      }),
+      loginAccount: builder.mutation({
+        query(data) {
+          return {
+            url: `/login`,
+            method: "POST",
+            body: data
+
+          };
+
+        },
+        transformErrorResponse: (response, meta, arg) => ({
+          message: formatError(response),
+          error: formatError(response),
+        }),
+       
+      })
+,
+      updatePassword: builder.mutation({
+        query(data) {
+          return {
+            url: `/password/change`,
+            method: "PUT",
+            body: data
+
+          };
+
+        },
+        transformErrorResponse: (response, meta, arg) => ({
+          message: formatError(response),
+          error: formatError(response),
+        }),
+       
       })
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useUploadDocumentMutation } = Api
+export const {useUploadDocumentMutation, useRegisterAccountMutation,
+   useLoginAccountMutation,
+   useUpdatePasswordMutation
+  
+  } = Api

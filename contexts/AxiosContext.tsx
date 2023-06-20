@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 import { Alert } from 'react-native';
 import { useAuth } from './AuthContext';
 
-const baseURL =  "https://bloomapp.herokuapp.com";
+const baseURL =  "https://bloom-safe-af07b9d4838b.herokuapp.com/api";
 
 type AxiosContextType = ReturnType<typeof axiosContextFactory>;
 

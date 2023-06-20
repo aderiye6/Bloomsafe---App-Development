@@ -11,6 +11,9 @@ import { useAxios } from '../contexts/AxiosContext';
 import { RootStackParamList } from '../types';
 import ProtectedScreen from './ProtectedScreen';
 import Screen from './Screen';
+import { useNavigation } from '@react-navigation/native';
+import { useUpdatePasswordMutation } from '../contexts/api';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -25,23 +28,33 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
     return response.data;
   });
 
-  const { mutate, isLoading: isChangingPassword } = useMutation({
-    mutationFn: async () => {
-      const response = await privateAxios.put('/password/change', {
+ const [updatePassword, {isLoading:Loading}]=  useUpdatePasswordMutation()
+
+
+  const handleUpdatePassword = async() => {
+    if (!oldPassword || !newPassword) return;
+
+    else{
+      const d=  {
         old_password: oldPassword,
         new_password: newPassword,
         confirm_password: newPassword,
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      if (data.message) Alert.alert('Password Changed', data.message);
-    },
-  });
-
-  const handleUpdatePassword = () => {
-    if (!oldPassword || !newPassword) return;
-    mutate();
+      }
+      try {
+        const data:any = await updatePassword(d).unwrap()
+       if(data){
+       
+       }
+     } catch (error:any) {
+      //  console.log(error)
+       Toast.show({
+         type: 'error',
+         text1: '',
+         text2: error?.error ??''
+       });
+     }
+    }
+   
   };
 
   return (
@@ -88,11 +101,14 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
             />
 
             <Button
-              text='Update Password'
+              text={Loading ?'Loading...': "Update Password"}
               onPress={handleUpdatePassword}
-              disabled={isChangingPassword}
+              disabled={Loading}
             />
-            <Button variant='white' text='Logout' onPress={() => logout()} />
+            <Button variant='white' text='Logout' onPress={() => {
+              logout()
+              navigation.replace('Login')
+            }} />
           </ScrollView>
         )}
       </ProtectedScreen>
