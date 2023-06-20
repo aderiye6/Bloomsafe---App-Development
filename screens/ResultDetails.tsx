@@ -12,10 +12,10 @@ const baseURL = process.env.BASE_URL ?? 'https://bloom-safe-af07b9d4838b.herokua
 
 const ResultDetails: React.FC<Props> = ({ route, navigation }) => {
   const { result }:any = route.params;
-  // const { resultTextDisplay } = useResultTextDisplay(result.comment);
-  // const { address } = useAddressFromLocation(result.latitude, result.longitude);
+
   const addrs =JSON.parse(result?.address)
 // console.log(JSON.parse(result?.address), "result")
+// console.log(result?.comment, "result")
   return (
     <Screen back={() => navigation.navigate('HomeScreen')}>
       <View style={styles.container}>
@@ -62,6 +62,10 @@ const ResultDetails: React.FC<Props> = ({ route, navigation }) => {
         <View style={styles.details}>
           <Text>Score:</Text>
           <Text style={styles.detailText}>{result?.score}</Text>
+        </View>
+        <View style={styles.details}>
+          <Text>Comment:</Text>
+          <Text style={styles.detailText}>{result?.comment}</Text>
         </View>
       </View>
     </Screen>
