@@ -2813,6 +2813,11 @@ ci-info@^3.2.0, ci-info@^3.3.0:
   resolved "https://registry.npmjs.org/ci-info/-/ci-info-3.8.0.tgz"
   integrity sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==
 
+clamp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clamp/-/clamp-1.0.1.tgz#66a0e64011816e37196828fdc8c8c147312c8634"
+  integrity sha512-kgMuFyE78OC6Dyu3Dy7vcx4uy97EIbVxJB/B0eJ3bUNAkwdNcxYzgKltnyADiYwsR7SEqkkUPsEUT//OVS6XMA==
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.npmjs.org/class-utils/-/class-utils-0.3.6.tgz"
@@ -3018,6 +3023,13 @@ compression@^1.7.1:
     on-headers "~1.0.2"
     safe-buffer "5.1.2"
     vary "~1.1.2"
+
+concat-color-matrices@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/concat-color-matrices/-/concat-color-matrices-1.0.0.tgz#7d77baa4148264806d4318d9a2378e7dec4bc413"
+  integrity sha512-K0IMtl4m9LcHg4vVFb40Txmie/GwCJBkquGSn6wtA9yIcszzFZgGc6co4sSnjFdqeJAv+q2LrCHMUSb2GHAChA==
+  dependencies:
+    invariant "^2.2.4"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -3486,6 +3498,13 @@ expo-font@~11.1.1:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-gl@12.3.1:
+  version "12.3.1"
+  resolved "https://registry.yarnpkg.com/expo-gl/-/expo-gl-12.3.1.tgz#371cfa5bbc851eea7e889fa4b93d5d88820f95d8"
+  integrity sha512-cf5WoTvvQI56o5ZVyJHZTwt/Kr597YOZXNktN5oP0mRQchwrqZoTg/pQJ3aVdOFBMRAG5f0fiRLyWOIKuWXwiA==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-image-editor@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/expo-image-editor/-/expo-image-editor-1.7.1.tgz#1021cb4f9b398192d1377253c11deecc246aa160"
@@ -3565,6 +3584,13 @@ expo-permissions@^14.1.1:
   version "14.1.1"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-14.1.1.tgz#6fc4ec5caf712df3ff2d9b7b831a6d9116f1d2b8"
   integrity sha512-hOuAOBz+ZLsSJ3E8Ere/oA7YIYLNGf9fCApTi9OQmeJyCBsBHynf1yqMfVVpuDcCMixZ2XzsWlScq75f+7U1dQ==
+
+expo-processing@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/expo-processing/-/expo-processing-2.2.3.tgz#de93fccf32ee859fd5e331a023ca6998242dad70"
+  integrity sha512-f00JTyAD+yI2GClplCziYPEF4H4gi5gFtWVbtVWNv8Be8s1ilp+2wzqe8iJsuUtKyEAvWCLj12xkBvjb/imtSg==
+  dependencies:
+    expo-gl "12.3.1"
 
 expo-splash-screen@~0.18.2:
   version "0.18.2"
@@ -6182,6 +6208,15 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-color-matrix-image-filters@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-color-matrix-image-filters/-/react-native-color-matrix-image-filters-6.0.3.tgz#e1af9a94a07a3ee1b269c92f385f66213b289072"
+  integrity sha512-yYwPbfhZzcRWLhsmkbtKBytlr/6CsLeMkMU+ds+xUGlHQI//raED4BzjMmOHKJlkciBtG39NyIx8D5lXnSIW+w==
+  dependencies:
+    concat-color-matrices "^1.0.0"
+    rn-color-matrices "^4.1.0"
+    ts-tiny-invariant "^2.0.4"
+
 react-native-gradle-plugin@^0.71.15:
   version "0.71.18"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.18.tgz#20ef199bc85be32e45bb6cc069ec2e7dcb1a74a6"
@@ -6536,6 +6571,13 @@ rimraf@~2.6.2:
   integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   dependencies:
     glob "^7.1.3"
+
+rn-color-matrices@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/rn-color-matrices/-/rn-color-matrices-4.1.0.tgz#9ac5ce3d7daaf33d336b877508649469cb39f8a5"
+  integrity sha512-a8++z3Zi4GhA0oWwKS3etdrVuVQ2q/ByTMh6lMxo+vaSv3SRSSg5SzpZk65GS0NCAqMhFT8WSvgSgNhO/F+xag==
+  dependencies:
+    clamp "^1.0.1"
 
 run-parallel@^1.1.9:
   version "1.2.0"
@@ -7212,6 +7254,11 @@ ts-interface-checker@^0.1.9:
   version "0.1.13"
   resolved "https://registry.npmjs.org/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
+
+ts-tiny-invariant@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/ts-tiny-invariant/-/ts-tiny-invariant-2.0.4.tgz#88b20adbbaf03b0f5349b0462d07c9c58ffd37d1"
+  integrity sha512-6AIQGf3rbMyci4fZU5aq5AUJN2O3sMPPY+R8waCguQOPRJDh0n/vmxVISCp72TJr4k5kikaU1yqX8bTwfTFjcQ==
 
 tslib@^2.0.1, tslib@^2.1.0, tslib@^2.4.0:
   version "2.5.2"

@@ -3,7 +3,7 @@ import { Camera, CameraType } from 'expo-camera';
 
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAxios } from '../../contexts/AxiosContext';
 import useLocation from '../../hooks/useLocation';
 import PermissionDenied from '../PermissionDenied/PermissionDenied';
@@ -233,7 +233,13 @@ const SnapChip: React.FC<Props> = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+   <View style={{
+    flex:1,
+    backgroundColor:'black'
+   }}>
+ <View style={{ flex: 1 , justifyContent:'center', alignItems:'center'}}>
+ <Text style={styles.paper}>Position Chip with region</Text>
+
       {isFocused ? (
         <Camera
           style={styles.camera}
@@ -246,31 +252,43 @@ const SnapChip: React.FC<Props> = ({ navigation }) => {
               <View style={styles.testArea}>
               {isLoading ? <Spinner /> : null}
               </View>
-              <View style={styles.shutterContainer}>
+             
+            </View>
+          ) : null}
+        </Camera>
+      ) : null}
+  
+    </View>
+    <View style={styles.shutterContainer}>
                 <TouchableOpacity
                   onPress={takePicture}
                   // disabled={isTesting}
                   style={styles.shutter}
                 />
               </View>
-            </View>
-          ) : null}
-        </Camera>
-      ) : null}
-    </View>
+   </View>
   );
 };
 
 const styles = StyleSheet.create({
+  paper:{
+fontSize:20,
+textAlign:'center',
+color:'white',
+fontWeight:'700',
+marginBottom:40
+
+  },
   camera: {
-    flex: 1,
+    width:120,
+    height:200,
     justifyContent:'center',
     alignItems:'center'
   },
   overlay: {
     flex: 1,
     backgroundColor: 'transparent',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   testArea: {
     flex: 1,
@@ -281,7 +299,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    marginVertical: 30,
   },
   shutter: {
     width: 70,
@@ -290,6 +308,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 2,
     backgroundColor: 'white',
+    elevation:3
   },
 });
 
